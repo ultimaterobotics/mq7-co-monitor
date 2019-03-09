@@ -129,17 +129,13 @@ float raw_value_to_CO_ppm(float value)
   }
   else
   {
-    sensor_100ppm_CO_resistance_kOhm = sensor_base_resistance_kOhm * 0.5;
-//This seems to contradict manufacturer's datasheet, but for my sensor it 
-//looks quite real using CO concentration produced by CH4 flame according to
-//this paper: http://www.iafss.org/publications/fss/8/1013/view/fss_8-1013.pdf 
-//my experiments were very rough though, so I could have overestimated CO concentration significantly
-//if you have calibrated sensor to produce reference 100 ppm CO, then
-//use it instead    
+    sensor_100ppm_CO_resistance_kOhm = sensor_base_resistance_kOhm * 0.25;
+//UPDATED: when checked on a CO meter, it seems that sensor corresponds to
+//the datasheet pretty well
   }
   float sensor_R_kOhm = reference_resistor_kOhm * 1023 / value - reference_resistor_kOhm;
   float R_relation = sensor_100ppm_CO_resistance_kOhm / sensor_R_kOhm;
-  float CO_ppm = 100 * (exp(R_relation) - 1.648);
+  float CO_ppm = 134 * R_relation - 35;
   if(CO_ppm < 0) CO_ppm = 0;
   return CO_ppm;
 }
